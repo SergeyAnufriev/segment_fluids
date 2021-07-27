@@ -20,7 +20,7 @@ def cav_number(path):
 class Dataset_(Dataset):
     def __init__(self, dir_,device):
         self.device   = device
-        self.files_   = glob.glob(dir_+'\*.npz')
+        self.files_   = glob.glob(dir_)
 
     def __len__(self):
         return len(self.files_)
@@ -50,7 +50,7 @@ class Dataset_(Dataset):
         values_[3]     = self.pressure_norm(values_[3])
 
         '''Get cavitation number'''
-        cav            = torch.full((1,128,128),cav_number(path_))
+        cav            = torch.full((1,128,128),cav_number(path_),device=self.device)
 
         '''Create model inputs'''
         Ux_Uy_mask     = torch.tensor(values_[:3,:,:],dtype=torch.float32,device=self.device)
