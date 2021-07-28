@@ -18,10 +18,10 @@ def cav_number(path):
 
 
 class Dataset_(Dataset):
-    def __init__(self, dir_,device):
+    def __init__(self, dir_,device,u_inf=2.):
         self.device   = device
         self.files_   = glob.glob(dir_)
-
+        self.u_inf    = u_inf
     def __len__(self):
         return len(self.files_)
 
@@ -44,18 +44,18 @@ class Dataset_(Dataset):
 
         '''Normilize velocity'''
         for i in [0,1,4,5]:
-            values_[i] = values_[i]/2
+            values_[i] = values_[i]/self.u_inf
 
         '''Normilise pressure'''
         values_[3]     = self.pressure_norm(values_[3])
 
         '''Get cavitation number'''
-        cav            = torch.full((1,128,128),cav_number(path_),device=self.device)
-        cav            = cav*torch.tensor(values_[2,:,:],device=self.device,dtype=torch.float32).view(1,128,128)
+        cav            = torch.full((1,128,128),cav_number(path_),device=self.device,dtype=torch.float32)
+        flip_mask      = 1 - values_[2,:,:]
+        cav            = cav*torch.tensor(flip_mask,device=self.device,dtype=torch.float32).view(1,128,128)
 
         '''Create model inputs'''
-        flip_mask      = 1 - values_[:3,:,:]
-        Ux_Uy_mask     = torch.tensor(flip_mask,dtype=torch.float32,device=self.device)
+        Ux_Uy_mask     = torch.tensor(values_[:3,:,:],dtype=torch.float32,device=self.device)
         inputs_        = torch.cat([cav,Ux_Uy_mask],dim=0)
 
         '''create model outputs'''
