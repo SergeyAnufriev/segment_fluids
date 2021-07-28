@@ -29,7 +29,9 @@ def relative_error(output_,target_,mask_,alpha=0.1,eps=1e-6):
     error         = error.view(n_channels,int(l/n_channels))
     error_indic_  = error>alpha
 
-    return error_indic_.sum(dim=1)/(128**2)
+    n_pixels_outside = 128**2-mask_.sum()
+
+    return error_indic_.sum(dim=1)/n_pixels_outside
 
 
 def model_test(model,test_data_loader,n_var):
