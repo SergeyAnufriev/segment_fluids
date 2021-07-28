@@ -27,12 +27,6 @@ from utils import relative_error
 for input_,target_ in data_loader:
     break
 
-print(relative_error(net(input_),target_,input_[:,3,:,:]))
-
-
-end_time = time.time()
-total_time = end_time - start_time
-print("Time: ", total_time)
-
+print(input_[:,0,:,:])
 
 

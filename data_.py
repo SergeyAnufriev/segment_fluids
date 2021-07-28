@@ -51,7 +51,7 @@ class Dataset_(Dataset):
 
         '''Get cavitation number'''
         cav            = torch.full((1,128,128),cav_number(path_),device=self.device)
-        cav            = cav*torch.tensor(values_[2,:,:],device=self.device).view(1,128,128)
+        cav            = cav*torch.tensor(values_[2,:,:],device=self.device,dtype=torch.float32).view(1,128,128)
 
         '''Create model inputs'''
         Ux_Uy_mask     = torch.tensor(values_[:3,:,:],dtype=torch.float32,device=self.device)
