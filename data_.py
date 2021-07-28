@@ -54,7 +54,8 @@ class Dataset_(Dataset):
         cav            = cav*torch.tensor(values_[2,:,:],device=self.device,dtype=torch.float32).view(1,128,128)
 
         '''Create model inputs'''
-        Ux_Uy_mask     = torch.tensor(values_[:3,:,:],dtype=torch.float32,device=self.device)
+        flip_mask      = 1 - values_[:3,:,:]
+        Ux_Uy_mask     = torch.tensor(flip_mask,dtype=torch.float32,device=self.device)
         inputs_        = torch.cat([cav,Ux_Uy_mask],dim=0)
 
         '''create model outputs'''
