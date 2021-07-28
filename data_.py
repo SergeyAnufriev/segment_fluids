@@ -63,7 +63,7 @@ class Dataset_(Dataset):
 
         '''Get cavitation number'''
         cav_n          = torch.tensor(cav_number(path_),device=self.device)
-        cav            = torch.full((1,128,128),cav_n,device=self.device,dtype=torch.float32)
+        cav            = torch.full((1,128,128),cav_number(path_),device=self.device,dtype=torch.float32)
         flip_mask      = 1 - values_[2,:,:]
         cav            = cav*torch.tensor(flip_mask,device=self.device,dtype=torch.float32).view(1,128,128)
 
@@ -77,7 +77,7 @@ class Dataset_(Dataset):
         '''create model outputs'''
         targets_       = torch.tensor(values_[3:,:,:],dtype=torch.float32,device=self.device)
 
-        return inputs_, targets_, cav_n,alpa
+        return inputs_, targets_,cav_n,alpa
 
 
 
