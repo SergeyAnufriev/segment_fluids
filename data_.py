@@ -62,13 +62,13 @@ class Dataset_(Dataset):
         values_[3]     = self.pressure_norm(values_[3])
 
         '''Get cavitation number'''
-        cav_n          = torch.tensor(cav_number(path_),device=self.device)
+        #cav_n          = torch.tensor(cav_number(path_),device=self.device)
         cav            = torch.full((1,128,128),cav_number(path_),device=self.device,dtype=torch.float32)
         flip_mask      = 1 - values_[2,:,:]
         cav            = cav*torch.tensor(flip_mask,device=self.device,dtype=torch.float32).view(1,128,128)
 
         '''Angle of attack'''
-        alpa           =torch.tensor(angle_(path_),device=self.device)
+        #alpa           =torch.tensor(angle_(path_),device=self.device)
 
         '''Create model inputs'''
         Ux_Uy_mask     = torch.tensor(values_[:3,:,:],dtype=torch.float32,device=self.device)
@@ -77,7 +77,7 @@ class Dataset_(Dataset):
         '''create model outputs'''
         targets_       = torch.tensor(values_[3:,:,:],dtype=torch.float32,device=self.device)
 
-        return inputs_, targets_,cav_n,alpa
+        return inputs_, targets_
 
 
 
