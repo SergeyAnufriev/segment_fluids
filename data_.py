@@ -44,10 +44,11 @@ class Dataset_(Dataset):
           return: normilised pressure'''
 
         '''P/(ro_*|v|^2)'''
-        x    = x/(self.ro*self.u_inf**2)
-        mean = np.mean(x)
 
-        return x - mean
+        x = x - np.mean(x)
+        new_x = x / (self.ro * self.u_inf ** 2)
+
+        return new_x
 
     def __getitem__(self,idx):
 
