@@ -45,7 +45,7 @@ class Dataset_(Dataset):
 
         '''P/(ro_*|v|^2)'''
 
-        x = x - np.mean(x)
+        x = x - np.mean(x) #remove offset
         new_x = x / (self.ro * self.u_inf ** 2)
 
         return new_x
@@ -60,7 +60,7 @@ class Dataset_(Dataset):
             values_[i] = values_[i]/self.u_inf
 
         '''Normilise pressure'''
-        values_[3]     = self.pressure_norm(values_[3])
+        values_[3]     = self.pressure_norm(values_[3])-self.pressure_norm(values_[3])*values_[2]
 
         '''Get cavitation number'''
        # cav_n          = torch.tensor(cav_number(path_),device=self.device)
