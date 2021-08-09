@@ -1,32 +1,49 @@
-from ref_unet import TurbNetG,weights_init
 from data_ import Dataset_
 from torch.utils.data import DataLoader
 import torch
-from utils import model_test
 import matplotlib.pyplot as plt
 import os
-import numpy as np
-import time
-import wandb
 
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
-dir_   = r'C:\Users\zcemg08\PycharmProjects\segment_fluids\data\train_hydro_2021\*.npz'
+dir_   = r'C:\Users\zcemg08\PycharmProjects\segment_fluids\data\paper\train\*.npz'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-start_time = time.time()
+data_loader = DataLoader(Dataset_(dir_,device,ro=1.,u_inf=100),batch_size=1)
+
+p_abs  = []
+vx_abs = []
+vy_abs = []
+
+for _, target_ in data_loader:
+    p_abs.append(torch.max(abs(target_[0,0,:,:])))
+    vx_abs.append(torch.max(abs(target_[0,1,:,:])))
+    vy_abs.append(torch.max(abs(target_[0,2,:,:])))
 
 
-net    = TurbNetG()
-net.apply(weights_init)
-data_loader = DataLoader(Dataset_(dir_,device),batch_size=1)
+fig, (ax1, ax2,ax3) = plt.subplots(3, 1,figsize=(10, 4))
 
-from utils import relative_error
+ax1.hist(p_abs)
+ax1.set_xlabel('Maximum absolute pressure')
+ax1.set_ylabel('Count')
+ax1.set_title('Pressure')
 
-for input_,target_ in data_loader:
-    break
+ax2.hist(vx_abs)
+ax2.set_xlabel('Maximum absolute V_X')
+ax2.set_ylabel('Count')
+ax2.set_title('V_X')
 
-print(input_[:,0,:,:])
+ax3.hist(vy_abs)
+ax3.set_xlabel('Maximum absolute V_Y')
+ax3.set_ylabel('Count')
+ax3.set_title('Maximum absolute V_Y')
+
+plt.show()
+
+
+
+
+
 
 
