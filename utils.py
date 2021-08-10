@@ -1,4 +1,5 @@
 import torch
+import math
 
 L1   = torch.nn.L1Loss(reduction='none')
 
@@ -50,3 +51,14 @@ def model_test(model,test_data_loader,n_var):
 
     return L1_result/len(test_data_loader), R_Error/len(test_data_loader)
 
+
+def computeLR(i,epochs, minLR, maxLR):
+    if i < epochs*0.5:
+        return maxLR
+    e = (i/float(epochs)-0.5)*2.
+    # rescale second half to min/max range
+    fmin = 0.
+    fmax = 6.
+    e = fmin + e*(fmax-fmin)
+    f = math.pow(0.5, e)
+    return minLR + (maxLR-minLR)*f

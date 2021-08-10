@@ -7,7 +7,7 @@ import os
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
-dir_   = r'C:\Users\zcemg08\PycharmProjects\segment_fluids\data\paper\train\*.npz'
+dir_   = r'C:\Users\zcemg08\PycharmProjects\segment_fluids\data\paper\train_\*.npz'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 data_loader = DataLoader(Dataset_(dir_,device,ro=1.,u_inf=100),batch_size=1)
@@ -17,12 +17,12 @@ vx_abs = []
 vy_abs = []
 
 for _, target_ in data_loader:
-    p_abs.append(torch.max(abs(target_[0,0,:,:])))
-    vx_abs.append(torch.max(abs(target_[0,1,:,:])))
-    vy_abs.append(torch.max(abs(target_[0,2,:,:])))
+    p_abs.append(torch.max(abs(target_[0,0,:,:])).data.numpy())
+    vx_abs.append(torch.max(abs(target_[0,1,:,:])).data.numpy())
+    vy_abs.append(torch.max(abs(target_[0,2,:,:])).data.numpy())
 
 
-fig, (ax1, ax2,ax3) = plt.subplots(3, 1,figsize=(10, 4))
+fig, (ax1, ax2,ax3) = plt.subplots(1, 3,figsize=(10, 4))
 
 ax1.hist(p_abs)
 ax1.set_xlabel('Maximum absolute pressure')

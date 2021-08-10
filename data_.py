@@ -28,17 +28,19 @@ def angle_(path):
 
 
 class Dataset_(Dataset):
-    def __init__(self, dir_,device,ro=1000,u_inf=2.):
+    def __init__(self, dir_,device,p_max=4.65,vx_max=2.04,vy_max=2.37,ro=1000):
         self.device   = device
         self.files_   = glob.glob(dir_)
-        self.u_inf    = u_inf
         self.ro       = ro
+        self.p_max    = p_max
+        self.vx_max   = vx_max
+        self.vy_max   = vy_max
 
     def __len__(self):
         return len(self.files_)
 
 
-    def pressure_norm(self,x):
+    def pressure_norm(self,x,u_inf):
         '''(Ian's density norm)
         Input: pressure matrix
           return: normilised pressure'''
@@ -46,7 +48,7 @@ class Dataset_(Dataset):
         '''P/(ro_*|v|^2)'''
 
         x = x - np.mean(x) #remove offset
-        new_x = x / (self.ro * self.u_inf ** 2)
+        new_x = x / (self.ro * u_inf ** 2)
 
         return new_x
 
@@ -55,21 +57,20 @@ class Dataset_(Dataset):
         path_     = self.files_[idx]
         values_   = np.load(path_)['a']
 
+        u_inf     = np.sqrt(values_[0][0,0]**2+values_[1][0,0]**2)
+
         '''Normilize velocity'''
         for i in [0,1,4,5]:
-            values_[i] = values_[i]/self.u_inf
+            values_[i] = values_[i]/u_inf
 
         '''Normilise pressure'''
-        values_[3]     = self.pressure_norm(values_[3])-self.pressure_norm(values_[3])*values_[2]
+        values_[3]     = self.pressure_norm(values_[3],u_inf)*(np.ones((128,128))-values_[2])
 
         '''Get cavitation number'''
-       # cav_n          = torch.tensor(cav_number(path_),device=self.device)
+
         cav            = torch.full((1,128,128),cav_number(path_),device=self.device,dtype=torch.float32)
         flip_mask      = 1 - values_[2,:,:]
         cav            = cav*torch.tensor(flip_mask,device=self.device,dtype=torch.float32).view(1,128,128)
-
-        '''Angle of attack'''
-        #alhpa           =torch.tensor(angle_(path_),device=self.device)
 
         '''Create model inputs'''
         Ux_Uy_mask     = torch.tensor(values_[:3,:,:],dtype=torch.float32,device=self.device)
@@ -77,10 +78,9 @@ class Dataset_(Dataset):
 
         '''create model outputs'''
 
-        '''For paper data only'''
-        #values_[3] /= 3.707
-        #values_[4] /= 1.937
-        #values_[5] /= 2.204
+        values_[3] /= self.p_max
+        values_[4] /= self.vx_max
+        values_[5] /= self.vy_max
 
         targets_       = torch.tensor(values_[3:,:,:],dtype=torch.float32,device=self.device)
 
