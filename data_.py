@@ -78,9 +78,9 @@ class Dataset_(Dataset):
         '''create model outputs'''
 
         '''For paper data only'''
-        values_[3] /= 3.707
-        values_[4] /= 1.937
-        values_[5] /= 2.204
+        #values_[3] /= 3.707
+        #values_[4] /= 1.937
+        #values_[5] /= 2.204
 
         targets_       = torch.tensor(values_[3:,:,:],dtype=torch.float32,device=self.device)
 
