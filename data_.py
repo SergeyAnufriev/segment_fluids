@@ -64,7 +64,8 @@ class Dataset_(Dataset):
             values_[i] = values_[i]/u_inf
 
         '''Normilise pressure'''
-        values_[3]     = self.pressure_norm(values_[3],u_inf)*(np.ones((128,128))-values_[2])
+        values_[3]     = self.pressure_norm(values_[3],u_inf)
+        values_[3]    -= values_[3]*values_[2]
 
         '''Get cavitation number'''
 
