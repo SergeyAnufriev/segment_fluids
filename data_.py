@@ -28,10 +28,12 @@ def angle_(path):
 
 
 class Dataset_(Dataset):
-    def __init__(self, dir_,device,p_max=4.65,vx_max=2.04,vy_max=2.37,ro=1000):
+    def __init__(self, dir_,device,p_max=4.65,x_max=100,y_max=38.12,vx_max=2.04,vy_max=2.37,ro=1000):
         self.device   = device
         self.files_   = glob.glob(dir_)
         self.ro       = ro
+        self.x_max    = x_max
+        self.y_max    = y_max
         self.p_max    = p_max
         self.vx_max   = vx_max
         self.vy_max   = vy_max
@@ -59,8 +61,12 @@ class Dataset_(Dataset):
 
         u_inf     = np.sqrt(values_[0][0,0]**2+values_[1][0,0]**2)
 
-        '''Normilize velocity'''
-        for i in [0,1,4,5]:
+        '''Normilize input velocity'''
+        values_[0]  /= self.x_max
+        values_[1]  /= self.y_max
+
+        '''Normilize output velocity'''
+        for i in [4,5]:
             values_[i] = values_[i]/u_inf
 
         '''Normilise pressure'''
