@@ -91,7 +91,7 @@ class Dataset_(Dataset):
 
         targets_       = torch.tensor(values_[3:,:,:],dtype=torch.float32,device=self.device)
 
-        return inputs_, targets_
+        return inputs_, targets_, angle_(path_)
 
 
 
