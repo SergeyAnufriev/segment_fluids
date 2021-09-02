@@ -94,7 +94,7 @@ class Dataset_(Dataset):
 
         targets_       = torch.tensor(values_[3:,:,:],dtype=torch.float32,device=self.device)
 
-        return inputs_, targets_, torch.tesnor(angle,device=self.device,dtype=torch.float32)
+        return inputs_, targets_, torch.tensor(angle,device=self.device,dtype=torch.float32)
 
 
 
