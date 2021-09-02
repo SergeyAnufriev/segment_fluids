@@ -61,8 +61,8 @@ class Dataset_(Dataset):
 
         u_inf     = np.sqrt(values_[0][0,0]**2+values_[1][0,0]**2)
 
-        angle = np.arctan(values_[1][0,0]/values_[0][0,0])
-        angle *= 180/np.pi
+        #angle = np.arctan(values_[1][0,0]/values_[0][0,0])
+        #angle *= 180/np.pi
 
         '''Normilize input velocity'''
         values_[0]  /= self.x_max
@@ -94,7 +94,7 @@ class Dataset_(Dataset):
 
         targets_       = torch.tensor(values_[3:,:,:],dtype=torch.float32,device=self.device)
 
-        return inputs_, targets_, torch.tensor(angle,device=self.device,dtype=torch.float32)
+        return inputs_, targets_ #torch.tensor(angle,device=self.device,dtype=torch.float32)
 
 
 
